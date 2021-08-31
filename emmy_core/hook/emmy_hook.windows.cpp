@@ -150,6 +150,7 @@ void LoadSymbolsRecursively(HANDLE hProcess, HMODULE hModule)
 			if (PE_SYMBOL_HAS_NAME(pSymbol))
 			{
 				const char* name = pSymbol->Name;
+				EmmyFacade::Get()->SendLog(LogType::Info, "\t[B]symbol: %s", name);
 				if (name[0] == 'l' && name[1] == 'u' && name[2] == 'a')
 				{
 					auto addr = (uint64_t)hModule;
