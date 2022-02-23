@@ -215,12 +215,12 @@ void LoadSymbolsRecursively(HANDLE hProcess, HMODULE hModule)
 			if (PE_SYMBOL_HAS_NAME(pSymbol))
 			{
 				const char* name = pSymbol->Name;
-				if (name[0] == 'l' && name[1] == 'u' && name[2] == 'a')
+				// if (name[0] == 'l' && name[1] == 'u' && name[2] == 'a')
 				{
 					auto addr = (uint64_t)hModule;
 					addr += pSymbol->Address.VA - pe.qwBaseAddress;
 					symbols[pSymbol->Name] = addr;
-
+					
 					EmmyFacade::Get().SendLog(LogType::Info, "\t[B]Lua symbol: %s", name);
 				}
 			}
