@@ -69,6 +69,8 @@ HOOK_STATUS UnHook(HOOK_HANDLE InHandle)
 
 int lua_pcall_worker(lua_State* L, int nargs, int nresults, int errfunc)
 {
+	//EmmyFacade::Get().SendLog(LogType::Info, "lua_pcall_worker");
+
 	LPVOID lp;
 	LhBarrierGetCallback(&lp);
 	const auto pcall = (_lua_pcall)lp;
@@ -159,6 +161,13 @@ void HookLuaFunctions(std::unordered_map<std::string, DWORD64>& symbols)
 	else // lua5.1 or luajit
 	{
 		HOOK(lua_resume, lua_resume_worker_51, false);
+		/*if (EXIST_SYMBOL(lua_pcall)) {
+			EmmyFacade::Get().SendLog(LogType::Info, "EXIST_SYMBOL lua_pcall");
+		}
+		if (EXIST_SYMBOL(lua_pcallk)) {
+			EmmyFacade::Get().SendLog(LogType::Info, "EXIST_SYMBOL lua_pcallk");
+		}
+		EmmyFacade::Get().SendLog(LogType::Info, "lua_resume_worker_51");*/
 	}
 }
 
@@ -215,7 +224,7 @@ void LoadSymbolsRecursively(HANDLE hProcess, HMODULE hModule)
 			if (PE_SYMBOL_HAS_NAME(pSymbol))
 			{
 				const char* name = pSymbol->Name;
-				// if (name[0] == 'l' && name[1] == 'u' && name[2] == 'a')
+				 if (name[0] == 'l' && name[1] == 'u' && name[2] == 'a')
 				{
 					auto addr = (uint64_t)hModule;
 					addr += pSymbol->Address.VA - pe.qwBaseAddress;

@@ -728,6 +728,7 @@ void EmmyFacade::Attach(lua_State* L)
 	}
 
 	lua_sethook(L, EmmyFacade::HookLua, LUA_MASKCALL | LUA_MASKLINE | LUA_MASKRET, 0);
+	SendLog(LogType::Info, "lua_sethook");
 	//
 	// auto mainState = GetMainState(L);
 	// auto debugger = emmyDebuggerManager->GetDebugger(L);
