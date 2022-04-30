@@ -14,8 +14,10 @@ target_include_directories(emmy_hook PUBLIC
 
 target_sources(emmy_hook PRIVATE
     ${emmy_SOURCE_DIR}/include/emmy_hook/emmy_hook.h
-
     #src
+    ${emmy_SOURCE_DIR}/include/emmy_hook/LuaTypes.h
+    ${emmy_SOURCE_DIR}/include/emmy_hook/DebugHelp.h
+    ${emmy_SOURCE_DIR}/include/emmy_hook/DebugHelp.cpp
     ${emmy_hook_SOURCE_DIR}/src/dllmain.cpp
     ${emmy_hook_SOURCE_DIR}/src/emmy_hook.cpp
     ${emmy_hook_SOURCE_DIR}/src/emmy_hook.windows.cpp
