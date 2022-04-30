@@ -117,6 +117,7 @@ HOOK_STATUS UnHook(HOOK_HANDLE InHandle)
 int lua_pcall_worker(lua_State* L, int nargs, int nresults, int errfunc)
 {
 	EmmyFacade::Get().SendLog(LogType::Info, "lua_pcall_worker");
+
 	LPVOID lp;
 	LhBarrierGetCallback(&lp);
 	const auto pcall = (_lua_pcall)lp;
