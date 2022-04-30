@@ -716,11 +716,12 @@ void EmmyFacade::StartupHookMode(int port)
 
 void EmmyFacade::Attach(lua_State* L)
 {
+	SendLog(LogType::Info, "lua_sethook");
 	if (!this->transporter->IsConnected())
 		return;
 
 	// 这里存在一个问题就是 hook 的时机太早了，globalstate 都还没初始化完毕
-
+	SendLog(LogType::Info, "lua_sethook1");
 	if (!isAPIReady)
 	{
 		// 考虑到emmy_hook use lua source
@@ -728,6 +729,7 @@ void EmmyFacade::Attach(lua_State* L)
 	}
 
 	lua_sethook(L, EmmyFacade::HookLua, LUA_MASKCALL | LUA_MASKLINE | LUA_MASKRET, 0);
+	SendLog(LogType::Info, "lua_sethook2");
 	//
 	// auto mainState = GetMainState(L);
 	// auto debugger = emmyDebuggerManager->GetDebugger(L);

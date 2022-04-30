@@ -24,6 +24,7 @@ static SharedFile file;
 HINSTANCE g_hInstance = NULL;
 
 BOOL WINAPI DllMain(HINSTANCE hModule, DWORD reason, LPVOID reserved) {
+	EmmyFacade::Get().SendLog(LogType::Info, "DllMain");
 	g_hInstance = hModule;
 	EmmyFacade::Get().SetWorkMode(WorkMode::Attach);
 	EmmyFacade::Get().StartHook = FindAndHook;
