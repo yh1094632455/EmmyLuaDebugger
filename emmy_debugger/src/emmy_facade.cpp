@@ -39,14 +39,11 @@ void EmmyFacade::HookLua(lua_State* L, lua_Debug* ar)
 
 void EmmyFacade::ReadyLuaHook(lua_State* L, lua_Debug* ar)
 {
+	if (!Get().readyHook)
 	{
-		std::lock_guard<std::mutex> lock(EmmyFacade::Get().readyHookMtx);
-		if (!EmmyFacade::Get().readyHook)
-		{
-			return;
-		}
-		EmmyFacade::Get().readyHook = false;
+		return;
 	}
+	Get().readyHook = false;
 
 	auto states = FindAllCoroutine(L);
 
@@ -63,7 +60,7 @@ void EmmyFacade::ReadyLuaHook(lua_State* L, lua_Debug* ar)
 		debugger->Attach();
 	}
 
-	EmmyFacade::Get().Hook(L, ar);
+	Get().Hook(L, ar);
 }
 
 EmmyFacade::EmmyFacade()
@@ -692,8 +689,7 @@ void EmmyFacade::SetReadyHook(lua_State* L)
 void EmmyFacade::StartDebug()
 {
 	emmyDebuggerManager->SetRunning(true);
-	std::lock_guard<std::mutex> lock(EmmyFacade::Get().readyHookMtx);
-	EmmyFacade::Get().readyHook = true;
+	readyHook = true;
 }
 
 void EmmyFacade::StartupHookMode(int port)
@@ -716,12 +712,11 @@ void EmmyFacade::StartupHookMode(int port)
 
 void EmmyFacade::Attach(lua_State* L)
 {
-	SendLog(LogType::Info, "lua_sethook");
 	if (!this->transporter->IsConnected())
 		return;
 
 	// 这里存在一个问题就是 hook 的时机太早了，globalstate 都还没初始化完毕
-	SendLog(LogType::Info, "lua_sethook1");
+
 	if (!isAPIReady)
 	{
 		// 考虑到emmy_hook use lua source
@@ -729,26 +724,4 @@ void EmmyFacade::Attach(lua_State* L)
 	}
 
 	lua_sethook(L, EmmyFacade::HookLua, LUA_MASKCALL | LUA_MASKLINE | LUA_MASKRET, 0);
-	SendLog(LogType::Info, "lua_sethook2");
-	//
-	// auto mainState = GetMainState(L);
-	// auto debugger = emmyDebuggerManager->GetDebugger(L);
-	//
-	// if (!debugger)
-	// {
-	// 	debugger = emmyDebuggerManager->AddDebugger(L);
-	//
-	// 	debugger->Start();
-	//
-	// 	if (debugger->IsMainCoroutine(L) && !install)
-	// 	{
-	// 		install = install_emmy_core(L);
-	// 	}
-	//
-	// 	debugger->Attach();
-	//
-
-	// }
-	//
-	// debugger->UpdateHook(LUA_MASKCALL | LUA_MASKLINE | LUA_MASKRET, L);
 }
